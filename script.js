@@ -1,4 +1,4 @@
-// --- 1. Evento Clic para cambiar de pantalla ---
+// 1. Transición de Clic
 const startBtn = document.getElementById('start');
 const cardScreen = document.getElementById('card-screen');
 
@@ -10,15 +10,25 @@ function abrirGalaxia() {
 startBtn.addEventListener('click', abrirGalaxia);
 startBtn.addEventListener('touchstart', abrirGalaxia);
 
-// --- 2. Galaxia 3D Centrada con Three.js ---
+// 2. Galaxia 3D Centrada
 const container = document.getElementById('canvas-container');
 
 const scene = new THREE.Scene();
 
-// Cámara colocada para ver la galaxia justo en el centro
+// Posicionamiento de cámara ajustado para centrar el plano en PC y celular
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 4, 6);
-camera.lookAt(0, 0, 0);
+
+function ajustarCamara() {
+  if (window.innerWidth > window.innerHeight) {
+    // Computadora / Laptop
+    camera.position.set(0, 2.8, 3.8);
+  } else {
+    // Celular
+    camera.position.set(0, 3.5, 4.5);
+  }
+  camera.lookAt(0, 0, 0);
+}
+ajustarCamara();
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,10 +38,10 @@ container.appendChild(renderer.domElement);
 // Parámetros de la Galaxia Espiral
 const parameters = {
   count: 35000,
-  size: 0.015,
-  radius: 4.5,
+  size: 0.014,
+  radius: 4.2,
   branches: 3,
-  spin: 1,
+  spin: 1.2,
   randomness: 0.5,
   insideColor: '#ff5599',
   outsideColor: '#2b1b84'
@@ -80,15 +90,16 @@ const material = new THREE.PointsMaterial({
 const points = new THREE.Points(geometry, material);
 scene.add(points);
 
-// Ajuste automático al cambiar tamaño de pantalla
+// Redimensionar pantalla
 window.addEventListener('resize', () => {
+  ajustarCamara();
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// Animación de rotación continua
+// Animación de rotación
 const clock = new THREE.Clock();
 
 function animate() {
