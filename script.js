@@ -8,7 +8,7 @@ function rs() {
 window.onresize = rs;
 rs();
 
-const st = [...Array(220)].map(() => ({
+const st = [...Array(250)].map(() => ({
   x: Math.random() * c.width,
   y: Math.random() * c.height,
   r: Math.random() * 2
@@ -20,7 +20,7 @@ function an() {
   ctx.fillStyle = 'white';
 
   st.forEach(s => {
-    ctx.globalAlpha = 0.5 + Math.random() * 0.5; // Efecto de titileo
+    ctx.globalAlpha = 0.3 + Math.random() * 0.7;
     ctx.beginPath();
     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
     ctx.fill();
