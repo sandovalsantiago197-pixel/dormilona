@@ -1,12 +1,9 @@
-const canvas = document.getElementById('galaxyCanvas');
+// Fondo de estrellas dinámicas
+const canvas = document.getElementById('starsCanvas');
 const ctx = canvas.getContext('2d');
 
 let width, height;
-let particles = [];
-let angleX = 0.4;
-let angleY = 0;
-let isDragging = false;
-let lastMouseX = 0, lastMouseY = 0;
+let stars = [];
 
 function resize() {
   width = canvas.width = window.innerWidth;
@@ -15,142 +12,42 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// Crear partículas de la galaxia espiral
-const PARTICLE_COUNT = 2000;
-const ARMS = 3;
+for (let i = 0; i < 200; i++) {
+  stars.push({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    size: Math.random() * 2,
+    alpha: Math.random(),
+    speed: Math.random() * 0.02 + 0.005
+  });
+}
 
-class Particle {
-  constructor() {
-    this.reset();
-  }
-
-  reset() {
-    const distance = Math.pow(Math.random(), 2) * (Math.min(width, height) * 0.45);
-    const armAngle = (Math.floor(Math.random() * ARMS) * (2 * Math.PI / ARMS));
-    const spiralAngle = distance * 0.015;
-    const finalAngle = armAngle + spiralAngle + (Math.random() - 0.5) * 0.4;
-
-    this.x = Math.cos(finalAngle) * distance;
-    this.y = (Math.random() - 0.5) * 30;
-    this.z = Math.sin(finalAngle) * distance;
-
-    this.size = Math.random() * 2 + 0.5;
+function animateStars() {
+  ctx.clearRect(0, 0, width, height);
+  
+  stars.forEach(s => {
+    s.alpha += s.speed;
+    if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
     
-    const colors = ['#ffffff', '#a98cff', '#7b5cff', '#e0d5ff', '#3d1b99'];
-    this.color = colors[Math.floor(Math.random() * colors.length)];
-    this.alpha = Math.random() * 0.8 + 0.2;
-    this.speed = (0.001 + Math.random() * 0.002) * (1 - distance / (width * 0.5));
-  }
-
-  update() {
-    const cos = Math.cos(this.speed);
-    const sin = Math.sin(this.speed);
-    const x = this.x * cos - this.z * sin;
-    const z = this.z * cos + this.x * sin;
-    this.x = x;
-    this.z = z;
-  }
-
-  draw() {
-    let cosY = Math.cos(angleY), sinY = Math.sin(angleY);
-    let cosX = Math.cos(angleX), sinX = Math.sin(angleX);
-
-    let x1 = this.x * cosY + this.z * sinY;
-    let z1 = this.z * cosY - this.x * sinY;
-
-    let y1 = this.y * cosX - z1 * sinX;
-    let z2 = z1 * cosX + this.y * sinX;
-
-    const perspective = 600;
-    const scale = perspective / (perspective + z2 + 300);
-
-    const screenX = width / 2 + x1 * scale;
-    const screenY = height / 2 + y1 * scale;
-
-    if (scale > 0) {
-      ctx.fillStyle = this.color;
-      ctx.globalAlpha = this.alpha * Math.min(1, scale);
-      ctx.beginPath();
-      ctx.arc(screenX, screenY, this.size * scale, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-}
-
-// Inicializar partículas
-for (let i = 0; i < PARTICLE_COUNT; i++) {
-  particles.push(new Particle());
-}
-
-// Control de Mouse / Touch para girar la galaxia
-canvas.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  lastMouseX = e.clientX;
-  lastMouseY = e.clientY;
-});
-
-window.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  let deltaX = e.clientX - lastMouseX;
-  let deltaY = e.clientY - lastMouseY;
-  angleY += deltaX * 0.005;
-  angleX += deltaY * 0.005;
-  lastMouseX = e.clientX;
-  lastMouseY = e.clientY;
-});
-
-window.addEventListener('mouseup', () => isDragging = false);
-
-// Touch en celular
-canvas.addEventListener('touchstart', (e) => {
-  isDragging = true;
-  lastMouseX = e.touches[0].clientX;
-  lastMouseY = e.touches[0].clientY;
-});
-
-window.addEventListener('touchmove', (e) => {
-  if (!isDragging) return;
-  let deltaX = e.touches[0].clientX - lastMouseX;
-  let deltaY = e.touches[0].clientY - lastMouseY;
-  angleY += deltaX * 0.005;
-  angleX += deltaY * 0.005;
-  lastMouseX = e.touches[0].clientX;
-  lastMouseY = e.touches[0].clientY;
-});
-
-window.addEventListener('touchend', () => isDragging = false);
-
-// Bucle de Animación continuo
-function animate() {
-  ctx.fillStyle = '#010409';
-  ctx.fillRect(0, 0, width, height);
-
-  // Núcleo brillante central
-  const grad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, 180);
-  grad.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-  grad.addColorStop(0.2, 'rgba(169, 140, 255, 0.5)');
-  grad.addColorStop(0.6, 'rgba(86, 48, 201, 0.15)');
-  grad.addColorStop(1, 'transparent');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, width, height);
-
-  particles.forEach(p => {
-    p.update();
-    p.draw();
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = Math.abs(s.alpha);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+    ctx.fill();
   });
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// Evento del clic super sencillo y 100% compatible
+const startBtn = document.getElementById('start');
+const sceneView = document.getElementById('scene');
+
+function openScene() {
+  startBtn.classList.add('hide');
+  sceneView.classList.remove('hide');
 }
 
-// Iniciar animación inmediatamente
-animate();
-
-// Transición al hacer clic en la pantalla de inicio o el corazón
-const startScreen = document.getElementById('start');
-const sceneScreen = document.getElementById('scene');
-
-startScreen.addEventListener('click', () => {
-  startScreen.classList.add('hide');
-  sceneScreen.classList.remove('hide');
-  resize();
-});
+startBtn.addEventListener('click', openScene);
+startBtn.addEventListener('touchstart', openScene);
