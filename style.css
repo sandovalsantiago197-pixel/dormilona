@@ -20,10 +20,10 @@ html, body {
   width: 100vw;
   height: 100vh;
   z-index: 1;
-  pointer-events: none;
 }
 
-#start, #card-screen {
+/* Pantalla de inicio con el corazón */
+#start {
   position: fixed;
   top: 0;
   left: 0;
@@ -34,23 +34,21 @@ html, body {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.85);
+  transition: opacity 0.8s ease, visibility 0.8s;
 }
 
 .oculto {
-  display: none !important;
-}
-
-/* Pantalla del Corazón */
-#start {
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.7);
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 #heart {
   font-size: min(25vw, 110px);
   animation: beat 0.9s infinite alternate;
   filter: drop-shadow(0 0 25px #ff2a6d);
-  pointer-events: none;
 }
 
 #start p {
@@ -58,7 +56,6 @@ html, body {
   margin-top: 15px;
   color: #c7a3ff;
   letter-spacing: 1px;
-  pointer-events: none;
 }
 
 @keyframes beat {
@@ -66,31 +63,15 @@ html, body {
   100% { transform: scale(1.18); }
 }
 
-/* Texto Flotante Libre (Sin recuadro/tarjeta) */
-.text-container {
-  text-align: center;
-  padding: 20px;
-  animation: fadeIn 1.2s ease-out;
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(15px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-h1 {
-  font-size: clamp(34px, 7vw, 56px);
-  font-weight: 800;
-  margin-bottom: 20px;
+/* Etiquetas 3D Flotantes en la Galaxia */
+.galaxy-text {
+  position: absolute;
   color: #ffffff;
-  /* Sombra múltiple para resaltar las letras perfectamente sobre el fondo brillantes */
-  text-shadow: 0 0 10px #000, 0 0 20px #a98cff, 0 0 30px #7b5cff;
-}
-
-.tag {
-  font-size: clamp(20px, 4.5vw, 30px);
-  margin: 12px 0;
   font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 0 8px #000, 0 0 15px rgba(169, 140, 255, 0.8);
+  font-size: clamp(16px, 3.5vw, 24px);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 8px #ff5599, 0 0 15px #a98cff, 0 0 25px #000000;
+  transition: opacity 0.5s ease;
 }
