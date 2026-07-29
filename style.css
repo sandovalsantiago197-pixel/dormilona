@@ -5,6 +5,7 @@
 }
 
 html, body {
+  width: 100%;
   height: 100%;
   overflow: hidden;
   background: #000000;
@@ -12,18 +13,24 @@ html, body {
   user-select: none;
 }
 
-/* El fondo 3D va al fondo sin estorbar los clics */
+/* El lienzo 3D ocupa toda la pantalla perfectamente centrado */
 #canvas-container {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
   pointer-events: none;
 }
 
-/* Pantallas por encima del fondo */
+/* Pantallas independientes */
 #start, #card-screen {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,19 +38,18 @@ html, body {
   z-index: 10;
 }
 
-/* Clase para ocultar */
 .oculto {
   display: none !important;
 }
 
-/* Corazón Interactivo */
+/* Corazón de Entrada */
 #start {
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 #heart {
-  font-size: min(25vw, 120px);
+  font-size: min(25vw, 110px);
   animation: beat 0.9s infinite alternate;
   filter: drop-shadow(0 0 25px #ff2a6d);
   pointer-events: none;
@@ -62,16 +68,17 @@ html, body {
   100% { transform: scale(1.18); }
 }
 
-/* Tarjeta Neón Estilo TikTok */
+/* Tarjeta Neón Flotante */
 .card {
   text-align: center;
-  padding: 35px 45px;
+  width: min(85vw, 380px);
+  padding: 30px 25px;
   border-radius: 24px;
-  background: rgba(10, 5, 25, 0.75);
+  background: rgba(12, 6, 28, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(169, 140, 255, 0.35);
-  box-shadow: 0 0 50px rgba(123, 92, 255, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(169, 140, 255, 0.4);
+  box-shadow: 0 0 40px rgba(123, 92, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.1);
   animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -81,15 +88,15 @@ html, body {
 }
 
 h1 {
-  font-size: clamp(32px, 5vw, 48px);
+  font-size: clamp(28px, 6vw, 42px);
   font-weight: 800;
-  margin-bottom: 18px;
+  margin-bottom: 15px;
   color: #ffffff;
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px #a98cff;
 }
 
 .tag {
-  font-size: clamp(18px, 3.5vw, 26px);
+  font-size: clamp(18px, 4vw, 24px);
   margin: 10px 0;
   font-weight: 600;
   color: #f3edff;
