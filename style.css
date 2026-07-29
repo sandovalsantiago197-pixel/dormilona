@@ -1,5 +1,10 @@
-html, body {
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+html, body {
   height: 100%;
   overflow: hidden;
   background: #020611;
@@ -9,6 +14,7 @@ html, body {
 canvas {
   position: fixed;
   inset: 0;
+  z-index: 0;
 }
 
 #start, #scene {
@@ -18,14 +24,14 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #fff;
-  text-align: center;
+  z-index: 10;
 }
 
 .hide {
   display: none !important;
 }
 
+/* Pantalla del Corazón */
 #heart {
   font-size: min(25vw, 120px);
   cursor: pointer;
@@ -35,47 +41,63 @@ canvas {
 
 #start p {
   font-size: 1.2rem;
-  margin-top: 10px;
+  margin-top: 15px;
   color: #a98cff;
+  text-shadow: 0 0 10px #a98cff;
 }
 
 @keyframes beat {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.18); }
 }
 
-/* Galaxia en el fondo del contenido */
+/* Contenedor Principal de Galaxia + Texto */
+.galaxy-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: min(85vw, 480px);
+  aspect-ratio: 1;
+}
+
+/* Esfera/Galaxia Animada */
 .galaxy {
   position: absolute;
-  width: min(80vw, 450px);
-  aspect-ratio: 1;
+  inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8), #a98cff 15%, #5630c9 40%, transparent 70%);
-  box-shadow: 0 0 60px #7b5cff;
-  animation: spin 30s linear infinite;
+  background: radial-gradient(circle at center, #ffffff 0%, #b892ff 18%, #5630c9 42%, transparent 70%),
+              conic-gradient(from 0deg, #6d4cff, #24124e, #9d88ff, #24124e, #6d4cff);
+  box-shadow: 0 0 80px #7b5cff, inset 0 0 40px #a98cff;
+  animation: spin 20s linear infinite;
   z-index: 1;
 }
 
 @keyframes spin {
+  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Contenedor del texto sobre la galaxia */
+/* Texto Encima de la Galaxia */
 .text {
   position: relative;
-  z-index: 2;
-  text-shadow: 0 0 12px rgba(0,0,0,0.8), 0 0 5px #000;
+  z-index: 5;
+  text-align: center;
+  color: #ffffff;
+  pointer-events: none;
 }
 
 h1 {
-  font-size: clamp(32px, 6vw, 55px);
-  margin-bottom: 15px;
-  color: #ffffff;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-shadow: 0 0 15px #000, 0 0 25px #000, 0 2px 5px rgba(0,0,0,0.9);
 }
 
-#scene p {
-  font-size: clamp(20px, 4vw, 32px);
-  margin: 8px 0;
+.text p {
+  font-size: clamp(20px, 3.5vw, 28px);
+  margin: 6px 0;
   font-weight: 600;
-  color: #f0eaff;
+  color: #ffffff;
+  text-shadow: 0 0 12px #000, 0 0 20px #000, 0 2px 4px rgba(0,0,0,0.9);
 }
