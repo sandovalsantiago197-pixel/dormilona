@@ -1,18 +1,24 @@
-// --- CONFIGURACIÓN DE GALAXIA 3D (THREE.JS) ---
+// 1. Función directa del clic/tap
+function mostrarGalaxia() {
+  document.getElementById('start').classList.add('oculto');
+  document.getElementById('card-screen').classList.remove('oculto');
+}
+
+// 2. Configuración de la Galaxia 3D en Three.js
 const container = document.getElementById('canvas-container');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 3, 4);
+camera.position.set(0, 3, 4.5);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 container.appendChild(renderer.domElement);
 
-// Parámetros de la Galaxia
+// Parámetros de la Galaxia Espiral
 const parameters = {
-  count: 35000,
+  count: 30000,
   size: 0.012,
   radius: 5,
   branches: 4,
@@ -22,67 +28,50 @@ const parameters = {
   outsideColor: '#1b3984'
 };
 
-let geometry = null;
-let material = null;
-let points = null;
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(parameters.count * 3);
+const colors = new Float32Array(parameters.count * 3);
 
-const generateGalaxy = () => {
-  if (points !== null) {
-    geometry.dispose();
-    material.dispose();
-    scene.remove(points);
-  }
+const colorInside = new THREE.Color(parameters.insideColor);
+const colorOutside = new THREE.Color(parameters.outsideColor);
 
-  geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(parameters.count * 3);
-  const colors = new Float32Array(parameters.count * 3);
+for (let i = 0; i < parameters.count; i++) {
+  const i3 = i * 3;
+  const radius = Math.random() * parameters.radius;
+  const spinAngle = radius * parameters.spin;
+  const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
-  const colorInside = new THREE.Color(parameters.insideColor);
-  const colorOutside = new THREE.Color(parameters.outsideColor);
+  const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+  const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+  const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
 
-  for (let i = 0; i < parameters.count; i++) {
-    // Posición
-    const i3 = i * 3;
-    const radius = Math.random() * parameters.radius;
-    const spinAngle = radius * parameters.spin;
-    const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+  positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+  positions[i3 + 1] = randomY;
+  positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
 
-    const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-    const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-    const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+  const mixedColor = colorInside.clone();
+  mixedColor.lerp(colorOutside, radius / parameters.radius);
 
-    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-    positions[i3 + 1] = randomY;
-    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+  colors[i3] = mixedColor.r;
+  colors[i3 + 1] = mixedColor.g;
+  colors[i3 + 2] = mixedColor.b;
+}
 
-    // Color
-    const mixedColor = colorInside.clone();
-    mixedColor.lerp(colorOutside, radius / parameters.radius);
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    colors[i3] = mixedColor.r;
-    colors[i3 + 1] = mixedColor.g;
-    colors[i3 + 2] = mixedColor.b;
-  }
+const material = new THREE.PointsMaterial({
+  size: parameters.size,
+  sizeAttenuation: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+  vertexColors: true
+});
 
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+const points = new THREE.Points(geometry, material);
+scene.add(points);
 
-  // Material
-  material = new THREE.PointsMaterial({
-    size: parameters.size,
-    sizeAttenuation: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    vertexColors: true
-  });
-
-  points = new THREE.Points(geometry, material);
-  scene.add(points);
-};
-
-generateGalaxy();
-
-// Resize
+// Redimensionar si cambia la pantalla
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -90,31 +79,14 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// Animación
+// Bucle de Animación
 const clock = new THREE.Clock();
 
-const tick = () => {
+function animate() {
   const elapsedTime = clock.getElapsedTime();
-
-  // Hacer girar la galaxia
-  if (points) {
-    points.rotation.y = elapsedTime * 0.12;
-  }
-
+  points.rotation.y = elapsedTime * 0.12;
   renderer.render(scene, camera);
-  window.requestAnimationFrame(tick);
-};
-
-tick();
-
-// --- TRANSICIÓN AL CLIC ---
-const startBtn = document.getElementById('start');
-const sceneView = document.getElementById('scene');
-
-function openCard() {
-  startBtn.classList.add('hide');
-  sceneView.classList.remove('hide');
+  requestAnimationFrame(animate);
 }
 
-startBtn.addEventListener('click', openCard);
-startBtn.addEventListener('touchstart', openCard);
+animate();
