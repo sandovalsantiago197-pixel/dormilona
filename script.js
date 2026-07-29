@@ -1,15 +1,24 @@
-// 1. Función directa del clic/tap
-function mostrarGalaxia() {
-  document.getElementById('start').classList.add('oculto');
-  document.getElementById('card-screen').classList.remove('oculto');
+// --- 1. Evento Clic para cambiar de pantalla ---
+const startBtn = document.getElementById('start');
+const cardScreen = document.getElementById('card-screen');
+
+function abrirGalaxia() {
+  startBtn.classList.add('oculto');
+  cardScreen.classList.remove('oculto');
 }
 
-// 2. Configuración de la Galaxia 3D en Three.js
+startBtn.addEventListener('click', abrirGalaxia);
+startBtn.addEventListener('touchstart', abrirGalaxia);
+
+// --- 2. Galaxia 3D Centrada con Three.js ---
 const container = document.getElementById('canvas-container');
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 3, 4.5);
+
+// Cámara colocada para ver la galaxia justo en el centro
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 4, 6);
+camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -18,14 +27,14 @@ container.appendChild(renderer.domElement);
 
 // Parámetros de la Galaxia Espiral
 const parameters = {
-  count: 30000,
-  size: 0.012,
-  radius: 5,
-  branches: 4,
+  count: 35000,
+  size: 0.015,
+  radius: 4.5,
+  branches: 3,
   spin: 1,
   randomness: 0.5,
-  insideColor: '#ff6097',
-  outsideColor: '#1b3984'
+  insideColor: '#ff5599',
+  outsideColor: '#2b1b84'
 };
 
 const geometry = new THREE.BufferGeometry();
@@ -71,7 +80,7 @@ const material = new THREE.PointsMaterial({
 const points = new THREE.Points(geometry, material);
 scene.add(points);
 
-// Redimensionar si cambia la pantalla
+// Ajuste automático al cambiar tamaño de pantalla
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -79,12 +88,12 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// Bucle de Animación
+// Animación de rotación continua
 const clock = new THREE.Clock();
 
 function animate() {
   const elapsedTime = clock.getElapsedTime();
-  points.rotation.y = elapsedTime * 0.12;
+  points.rotation.y = elapsedTime * 0.15;
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
