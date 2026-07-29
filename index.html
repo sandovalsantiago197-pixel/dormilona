@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Para Ti ❤️</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Carga de Three.js para la galaxia 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-
-  <!-- Fondo de Estrellas Titilantes -->
-  <canvas id="starsCanvas"></canvas>
 
   <!-- Pantalla Inicial -->
   <div id="start">
@@ -17,14 +16,16 @@
     <p>Haz clic en el corazón</p>
   </div>
 
-  <!-- Escena Final con Galaxia Real y Tarjeta -->
+  <!-- Contenedor 3D de la Galaxia -->
+  <div id="canvas-container"></div>
+
+  <!-- Tarjeta con Mensaje -->
   <div id="scene" class="hide">
-    <div class="galaxy-real"></div>
     <div class="card">
       <h1>Te quiero...</h1>
-      <p>✨ Dormilona</p>
-      <p>😊 Cachetona</p>
-      <p>😤 Enojona</p>
+      <p class="tag">✨ Dormilona</p>
+      <p class="tag">😊 Cachetona</p>
+      <p class="tag">😤 Enojona</p>
     </div>
   </div>
 
