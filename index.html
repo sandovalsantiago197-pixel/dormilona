@@ -8,24 +8,21 @@
 </head>
 <body>
 
-  <canvas id="stars"></canvas>
-
-  <!-- Pantalla Inicial con Corazón -->
+  <!-- Pantalla Inicial -->
   <div id="start">
     <div id="heart">❤️</div>
     <p>Haz clic en el corazón</p>
   </div>
 
-  <!-- Escena de la Galaxia y Texto -->
+  <!-- Escena Interactiva -->
   <div id="scene" class="hide">
-    <div class="galaxy-container">
-      <div class="galaxy"></div>
-      <div class="text">
-        <h1>Te quiero...</h1>
-        <p>✨ Dormilona</p>
-        <p>😊 Cachetona</p>
-        <p>😤 Enojona</p>
-      </div>
+    <canvas id="galaxyCanvas"></canvas>
+    
+    <div class="text-overlay">
+      <h1>Te quiero...</h1>
+      <p class="tag">✨ Dormilona</p>
+      <p class="tag">😊 Cachetona</p>
+      <p class="tag">😤 Enojona</p>
     </div>
   </div>
 
