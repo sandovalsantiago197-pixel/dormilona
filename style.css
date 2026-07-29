@@ -1,1 +1,81 @@
-html,body{margin:0;height:100%;overflow:hidden;background:#020611;font-family:Segoe UI,sans-serif}canvas{position:fixed;inset:0}#start,#scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff}.hide{display:none}#heart{font-size:min(25vw,120px);cursor:pointer;animation:b 1s infinite}h1{font-size:clamp(32px,6vw,60px)}#scene p{font-size:clamp(24px,4vw,38px)}@keyframes b{50%{transform:scale(1.15)}}.galaxy{position:absolute;width:min(70vw,500px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff,#a98cff 12%,#5630c9 35%,transparent 65%),conic-gradient(#6d4cff,#24124e,#9d88ff,#24124e,#6d4cff);box-shadow:0 0 60px #7b5cff;animation:s 30s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #020611;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+}
+
+#start, #scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+}
+
+.hide {
+  display: none !important;
+}
+
+#heart {
+  font-size: min(25vw, 120px);
+  cursor: pointer;
+  animation: beat 1s infinite;
+  user-select: none;
+}
+
+#start p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: #a98cff;
+}
+
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Galaxia en el fondo del contenido */
+.galaxy {
+  position: absolute;
+  width: min(80vw, 450px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8), #a98cff 15%, #5630c9 40%, transparent 70%);
+  box-shadow: 0 0 60px #7b5cff;
+  animation: spin 30s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Contenedor del texto sobre la galaxia */
+.text {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 12px rgba(0,0,0,0.8), 0 0 5px #000;
+}
+
+h1 {
+  font-size: clamp(32px, 6vw, 55px);
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+#scene p {
+  font-size: clamp(20px, 4vw, 32px);
+  margin: 8px 0;
+  font-weight: 600;
+  color: #f0eaff;
+}
